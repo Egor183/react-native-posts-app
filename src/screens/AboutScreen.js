@@ -1,10 +1,11 @@
 import React from "react";
 import { View, Text, StyleSheet } from "react-native";
 
-export const AboutScreen = ({}) => {
+export const AboutScreen = () => {
   return (
-    <View styles={styles.center}>
-      <Text>AboutScreen</Text>
+    <View style={styles.center}>
+      <Text style={styles.font}>Note taking app.</Text>
+      <Text>Version: 1.0.0</Text>
     </View>
   );
 };
@@ -15,4 +16,5 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
   },
+  font: { fontFamily: "open-bold" },
 });
