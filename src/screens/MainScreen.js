@@ -1,7 +1,16 @@
-import React from "react";
+import React, { useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import { PostList } from "../components/PostList";
-import { DATA } from "../data";
+import { loadPosts } from "../store/actions/post-actions";
 
 export const MainScreen = ({ navigation }) => {
-  return <PostList navigation={navigation} data={DATA} />;
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    dispatch(loadPosts());
+  }, [dispatch]);
+
+  const allPosts = useSelector((state) => state.posts.allPosts);
+
+  return <PostList navigation={navigation} data={allPosts} />;
 };

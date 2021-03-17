@@ -1,14 +1,18 @@
 import React, { useEffect } from "react";
+import { useSelector, useDispatch } from "react-redux";
 import { Text, StyleSheet, Image, Button, ScrollView, Alert } from "react-native";
-import { CommonActions } from "@react-navigation/native";
-import { DATA } from "../data";
 import { THEME } from "../theme";
+import { removePost } from "../store/actions/post-actions";
 
 export const PostScreen = ({ route, navigation }) => {
   let postId = route.params.postId;
+  const DATA = useSelector((state) => state.posts.allPosts);
   const post = DATA.find((p) => p.id === postId);
+  const dispatch = useDispatch();
 
-  useEffect(() => navigation.dispatch(CommonActions.setParams({ booked: post.booked })), []);
+  useEffect(() => {
+    navigation.setParams({ booked: post.booked });
+  }, []);
 
   const removeHandler = () => {
     Alert.alert(
@@ -17,10 +21,16 @@ export const PostScreen = ({ route, navigation }) => {
       [
         {
           text: "Cancel",
-          onPress: () => console.log("Cancel Pressed"),
+          onPress: () => console.log("cancel"),
           style: "cancel",
         },
-        { text: "Delete", onPress: () => console.log("OK Pressed") },
+        {
+          text: "Delete",
+          onPress: () => {
+            navigation.navigate("AllPosts");
+            dispatch(removePost(postId));
+          },
+        },
       ],
       { cancelable: false }
     );
@@ -28,8 +38,8 @@ export const PostScreen = ({ route, navigation }) => {
 
   return (
     <ScrollView>
-      <Image source={{ uri: post.img }} style={styles.image} />
-      <Text style={styles.title}>{post.text}</Text>
+      <Image source={{ uri: post && post.img }} style={styles.image} />
+      <Text style={styles.title}>{post && post.text}</Text>
       <Button title="delete" color={THEME.DANGER_COLOR} onPress={removeHandler} />
     </ScrollView>
   );

@@ -19,7 +19,7 @@ export const DrawerNavigation = () => {
       <Drawer.Navigator
         drawerContentOptions={{ activeTintColor: THEME.MAIN_COLOR, labelStyle: { fontWeight: "bold" } }}
       >
-        <Drawer.Screen name="Main" component={BottomAppNavigation} options={{ drawerIcon: HomeIcon }} />
+        <Drawer.Screen name="Home" component={BottomAppNavigation} options={{ drawerIcon: HomeIcon }} />
         <Drawer.Screen name="About" component={AboutScreenNavigation} options={{ drawerIcon: AboutIcon }} />
         <Drawer.Screen name="New post" component={CreateScreenNavigation} options={{ drawerIcon: AddIcon }} />
       </Drawer.Navigator>

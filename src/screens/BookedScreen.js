@@ -1,7 +1,9 @@
 import React from "react";
-import { DATA } from "../data";
+import { useSelector } from "react-redux";
 import { PostList } from "../components/PostList";
 
 export const BookedScreen = ({ navigation }) => {
-  return <PostList navigation={navigation} data={DATA.filter((post) => post.booked)} />;
+  const bookedPosts = useSelector((state) => state.posts.bookedPosts);
+
+  return <PostList navigation={navigation} data={bookedPosts} />;
 };
