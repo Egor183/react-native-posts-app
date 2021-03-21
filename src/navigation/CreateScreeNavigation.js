@@ -1,5 +1,5 @@
 import React from "react";
-import { AboutScreen } from "../screens/AboutScreen";
+import { CreateScreen } from "../screens/CreateScreen";
 import { createStackNavigator } from "@react-navigation/stack";
 import { THEME } from "../theme";
 import { HeaderButtons, Item } from "react-navigation-header-buttons";
@@ -27,7 +27,7 @@ export const CreateScreenNavigation = () => {
     >
       <Stack.Screen
         name="Create"
-        component={AboutScreen}
+        component={CreateScreen}
         options={({ navigation }) => ({
           title: "Create",
           headerLeft: () => MainScrHeaderLeft(navigation),
