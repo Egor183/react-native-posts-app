@@ -7,7 +7,6 @@ import { THEME } from "../theme";
 import { HeaderButtons, Item } from "react-navigation-header-buttons";
 import AppHeaderIconButton from "../components/AppHeaderIcon";
 import { toggleBooked } from "../store/actions/post-actions";
-import { useEffect } from "react/cjs/react.development";
 
 const Stack = createStackNavigator();
 
@@ -27,15 +26,18 @@ export const PostsNavigation = () => {
     );
   };
 
-  const PostRight = (postId, booked) => {
-    let currentBooked = booked;
+  const PostRight = (postId) => {
     const bookedPosts = useSelector((state) => state.posts.bookedPosts);
-    currentBooked = bookedPosts.find((p) => p.id === postId);
+    const currentPost = bookedPosts.find((p) => p.id === postId);
 
-    const bookedHandler = () => dispatch(toggleBooked(postId));
+    const bookedHandler = () => dispatch(toggleBooked(postId, currentPost && currentPost.booked));
     return (
       <HeaderButtons HeaderButtonComponent={AppHeaderIconButton}>
-        <Item name="Toggle drawer" iconName={currentBooked ? "ios-star" : "ios-star-outline"} onPress={bookedHandler} />
+        <Item
+          name="Toggle drawer"
+          iconName={currentPost && currentPost.booked ? "ios-star" : "ios-star-outline"}
+          onPress={bookedHandler}
+        />
       </HeaderButtons>
     );
   };
@@ -62,9 +64,9 @@ export const PostsNavigation = () => {
         name="Post"
         component={PostScreen}
         options={({ route }) => ({
-          title: `Post ${route.params.postId} от ${new Date(route.params.date).toLocaleDateString()}`,
+          title: `Post ${route.params.postId} from ${new Date(route.params.date).toLocaleDateString()}`,
           headerRight: () => {
-            return PostRight(route.params.postId, route.params.booked);
+            return PostRight(route.params.postId);
           },
         })}
       />

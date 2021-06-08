@@ -1,42 +1,65 @@
 import React, { useState } from "react";
 import { useDispatch } from "react-redux";
-import { View, Text, StyleSheet, TextInput, Image, Button, Keyboard } from "react-native";
-import { TouchableWithoutFeedback } from "react-native-gesture-handler";
+import { useFocusEffect } from "@react-navigation/native";
+import { View, Text, StyleSheet, TextInput, Image, Button, Keyboard, Dimensions } from "react-native";
+import addPhoto from "../assets/a5f6dcb2cb8b7630dc5ecdaeecd6a2de.png";
+import { ScrollView, TouchableWithoutFeedback } from "react-native-gesture-handler";
 import { THEME } from "../theme";
 import { createPost } from "../store/actions/post-actions";
+import PhotoPicker from "../components/PhotoPicker";
+
+const windowWidth = Dimensions.get("window").width;
+const windowHeight = Dimensions.get("window").height;
 
 export const CreateScreen = ({ navigation }) => {
   const dispatch = useDispatch();
   const [text, setText] = useState("");
   const [showError, setShowError] = useState(false);
+  const [image, setImage] = useState();
+  const [isCameraShowed, setIsCameraShowed] = useState(false);
 
   const createPostHandler = () => {
     if (text) {
       setShowError(false);
+      dispatch(createPost(image, text));
       navigation.navigate("AllPosts");
-      dispatch(
-        createPost("https://static.coindesk.com/wp-content/uploads/2019/01/shutterstock_1012724596-860x430.jpg", text)
-      );
     } else {
       setShowError(true);
     }
   };
 
+  useFocusEffect(
+    React.useCallback(() => {
+      setImage();
+      setText("");
+    }, [])
+  );
+
   return (
-    <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
-      <View style={styles.center}>
-        <Text style={styles.mainText}>CreateScreen</Text>
-        <Image
-          source={{ uri: "https://static.coindesk.com/wp-content/uploads/2019/01/shutterstock_1012724596-860x430.jpg" }}
-          style={styles.image}
-        />
-        <TextInput style={styles.textInput} placeholder="Add description..." multiline onChangeText={setText} />
-        {showError && <Text style={styles.error}>the field cannot be empty</Text>}
-        <View style={styles.buttonWrapper}>
-          <Button title="Create post" onPress={createPostHandler} />
-        </View>
-      </View>
-    </TouchableWithoutFeedback>
+    <View>
+      <ScrollView>
+        <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+          <View style={styles.center}>
+            <Text style={styles.mainText}>CreateScreen</Text>
+            {!isCameraShowed && (
+              <Image source={image ? { uri: image } : addPhoto} style={styles.image} resizeMode="stretch" />
+            )}
+            <PhotoPicker setImage={setImage} setIsCameraShowed={setIsCameraShowed} isCameraShowed={isCameraShowed} />
+            <TextInput
+              value={text}
+              style={styles.textInput}
+              placeholder="Add description..."
+              multiline
+              onChangeText={setText}
+            />
+            {showError && <Text style={styles.error}>the field cannot be empty</Text>}
+            <View style={styles.buttonWrapper}>
+              <Button title="Create post" onPress={createPostHandler} />
+            </View>
+          </View>
+        </TouchableWithoutFeedback>
+      </ScrollView>
+    </View>
   );
 };
 
@@ -66,9 +89,10 @@ const styles = StyleSheet.create({
   },
 
   image: {
-    width: "90%",
-    height: 200,
     marginTop: 20,
+    marginBottom: 20,
+    width: windowWidth,
+    height: 0.5 * windowHeight,
   },
 
   error: {
@@ -79,5 +103,6 @@ const styles = StyleSheet.create({
 
   buttonWrapper: {
     marginTop: 10,
+    marginBottom: 30,
   },
 });
